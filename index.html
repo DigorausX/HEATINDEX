@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ดัชนีความร้อน (Heat Index)</title>
+    
+    <!-- เพิ่ม MathJax สำหรับแสดงผลสมการคณิตศาสตร์ (LaTeX) -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
     <style>
         :root {
             --primary-color: #333;
@@ -26,10 +31,10 @@
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
-        h1, h2 {
-            text-align: center;
+        h1, h2, h3 {
             color: #2c3e50;
         }
+        h1 { text-align: center; }
         .calculator {
             background: #f9f9f9;
             padding: 20px;
@@ -37,9 +42,7 @@
             border: 1px solid #ddd;
             margin-top: 20px;
         }
-        .input-group {
-            margin-bottom: 20px;
-        }
+        .input-group { margin-bottom: 20px; }
         label {
             display: block;
             font-weight: bold;
@@ -58,12 +61,10 @@
             color: #333;
             font-size: 1.3em;
             font-weight: bold;
-            background-color: #8bc34a; /* สีเริ่มต้น */
+            background-color: #aed581;
             transition: background-color 0.3s, color 0.3s;
         }
-        .value-display {
-            color: #d35400;
-        }
+        .value-display { color: #d35400; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -81,9 +82,19 @@
             color: white;
             text-align: center;
         }
-        .text-center {
-            text-align: center;
-            font-weight: bold;
+        .text-center { text-align: center; font-weight: bold; }
+        .info-box {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        hr {
+            border: 0;
+            height: 1px;
+            background: #ddd;
+            margin: 30px 0;
         }
     </style>
 </head>
@@ -140,6 +151,40 @@
             <td>เมื่อสัมผัสความร้อน และทำกิจกรรมกลางแจ้งเป็นเวลานานอย่างต่อเนื่อง มีความเสี่ยงสูงมากที่เกิดโรคลมร้อน หรือ ฮีทสโตรก (Heat stroke)</td>
         </tr>
     </table>
+
+    <div class="info-box">
+        <strong>ข้อควรระวังสำคัญ:</strong> ค่าดัชนีความร้อนที่คำนวณได้นี้ เป็นค่าที่ถูกประเมินสำหรับ <strong>"พื้นที่ในร่มและมีลมพัดอ่อนๆ"</strong> หากคุณทำกิจกรรมกลางแจ้งที่โดนแสงแดดโดยตรง อุณหภูมิที่ร่างกายรู้สึกได้อาจเพิ่มสูงขึ้นจากค่าที่คำนวณได้อีกถึง 8°C (15°F)
+    </div>
+
+    <hr>
+
+    <h2>ที่มาและสมการคำนวณ (The Science of Heat Index)</h2>
+    <p>แนวคิดเรื่องดัชนีความร้อน ถูกนำเสนอครั้งแรกในปี 1979 โดย <strong>Robert G. Steadman</strong> ซึ่งได้สร้างตารางประเมินผลกระทบของอุณหภูมิและความชื้นที่มีต่อร่างกายมนุษย์ อย่างไรก็ตาม ตารางของ Steadman มีตัวแปรซับซ้อนมากมาย</p>
+    
+    <p>ในปี 1990 <strong>Lans P. Rothfusz</strong> ได้พัฒนาสมการทางคณิตศาสตร์แบบถดถอยพหุคูณ (Multiple Regression) เพื่อให้หน่วยงานพยากรณ์อากาศแห่งชาติของสหรัฐอเมริกา (NOAA / NWS) นำไปใช้คำนวณแทนตารางของ Steadman ได้ง่ายขึ้น โดยสมการหลักคือ:</p>
+
+    <div style="overflow-x: auto;">
+        $$ \text{HI} = -42.379 + 2.04901523T + 10.14333127R - 0.22475541TR - 0.00683783T^2 - 0.05481717R^2 + 0.00122874T^2R + 0.00085282TR^2 - 0.00000199T^2R^2 $$
+    </div>
+
+    <p>โดยที่:</p>
+    <ul>
+        <li>$ \text{HI} $ = ดัชนีความร้อน (หน่วยเป็นองศาฟาเรนไฮต์ °F)</li>
+        <li>$ T $ = อุณหภูมิของอากาศ (หน่วยเป็นองศาฟาเรนไฮต์ °F)</li>
+        <li>$ R $ = ความชื้นสัมพัทธ์ (หน่วยเป็นเปอร์เซ็นต์ %)</li>
+    </ul>
+
+    <h3>การปรับแก้ของ NOAA (NOAA NWS Adjustments)</h3>
+    <p>หน่วยงานสภาพอากาศแห่งชาติ (NWS) ได้เพิ่มเงื่อนไขการปรับแก้สมการของ Rothfusz เพื่อให้แม่นยำยิ่งขึ้นในสภาวะสุดโต่ง:</p>
+    <ul>
+        <li><strong>กรณีอากาศแห้งและร้อนจัด:</strong> หากความชื้น $ R < 13\% $ และอุณหภูมิ $ T $ อยู่ระหว่าง 80 ถึง 112 °F จะต้องนำค่า $ \text{HI} $ มา <strong>ลบ</strong> ด้วยสมการชดเชย:
+        $$ \text{Adjustment} = \frac{13 - R}{4} \times \sqrt{\frac{17 - |T - 95|}{17}} $$
+        </li>
+        <li><strong>กรณีอากาศชื้นจัดและอุณหภูมิไม่สูงมาก:</strong> หากความชื้น $ R > 85\% $ และอุณหภูมิ $ T $ อยู่ระหว่าง 80 ถึง 87 °F จะต้องนำค่า $ \text{HI} $ มา <strong>บวก</strong> ด้วยสมการชดเชย:
+        $$ \text{Adjustment} = \frac{R - 85}{10} \times \frac{87 - T}{5} $$
+        </li>
+    </ul>
+
 </div>
 
 <script>
@@ -151,15 +196,33 @@
     const riskLevel = document.getElementById('riskLevel');
     const resultBox = document.getElementById('resultBox');
 
-    function calculateHeatIndex(tCelsius, rh) {
-        let t = (tCelsius * 9/5) + 32; 
+    // ฟังก์ชันคำนวณตาม Algorithm ของ NOAA NWS (มีความแม่นยำสูงสุด)
+    function calculateNOAAHeatIndex(tCelsius, rh) {
+        let t = (tCelsius * 9/5) + 32; // เปลี่ยน C เป็น F
         
-        let hi = -42.379 + 2.04901523*t + 10.14333127*rh - 0.22475541*t*rh 
+        // ถ้าอุณหภูมิต่ำกว่า 80°F ใช้สูตรง่าย (Simple HI)
+        let hi = 0.5 * (t + 61.0 + ((t - 68.0) * 1.2) + (rh * 0.094));
+
+        // ถ้า Simple HI ได้ 80°F ขึ้นไป ให้ใช้สมการของ Rothfusz เต็มรูปแบบ
+        if (hi >= 80) {
+            hi = -42.379 + 2.04901523*t + 10.14333127*rh - 0.22475541*t*rh 
                  - 0.00683783*t*t - 0.05481717*rh*rh + 0.00122874*t*t*rh 
                  + 0.00085282*t*rh*rh - 0.00000199*t*t*rh*rh;
 
+            // เงื่อนไขปรับแก้ (Adjustments) ตามมาตรฐาน NOAA
+            if (rh < 13 && t >= 80 && t <= 112) {
+                let adjustment = ((13 - rh) / 4) * Math.sqrt((17 - Math.abs(t - 95)) / 17);
+                hi = hi - adjustment;
+            } else if (rh > 85 && t >= 80 && t <= 87) {
+                let adjustment = ((rh - 85) / 10) * ((87 - t) / 5);
+                hi = hi + adjustment;
+            }
+        }
+
+        // เปลี่ยน F กลับเป็น C
         let hiCelsius = (hi - 32) * 5/9;
         
+        // ถ้าอุณหภูมิจริงต่ำกว่า 27C (อากาศไม่ร้อน) ปกติจะไม่นำมาคำนวณผลกระทบ
         if (tCelsius < 27) return tCelsius; 
         
         return hiCelsius;
@@ -172,29 +235,28 @@
         tempValue.innerText = t;
         humidValue.innerText = rh;
 
-        let hi = calculateHeatIndex(t, rh);
+        let hi = calculateNOAAHeatIndex(t, rh);
         let hiFixed = hi.toFixed(1);
         heatIndexResult.innerText = hiFixed;
 
-        // เปลี่ยนสีและข้อความตามเกณฑ์ในรูปภาพเป๊ะๆ
         if (hi < 27.0) {
             resultBox.style.backgroundColor = "#e0e0e0"; 
             resultBox.style.color = "#333";
             riskLevel.innerText = "ระดับ: ปกติ";
         } else if (hi >= 27.0 && hi <= 32.9) {
-            resultBox.style.backgroundColor = "#aed581"; // สีเขียว เฝ้าระวัง
+            resultBox.style.backgroundColor = "#aed581"; 
             resultBox.style.color = "#000";
             riskLevel.innerText = "ระดับ: เฝ้าระวัง";
         } else if (hi >= 33.0 && hi <= 41.9) {
-            resultBox.style.backgroundColor = "#fff176"; // สีเหลือง เตือนภัย
+            resultBox.style.backgroundColor = "#fff176"; 
             resultBox.style.color = "#000";
             riskLevel.innerText = "ระดับ: เตือนภัย";
         } else if (hi >= 42.0 && hi <= 51.9) {
-            resultBox.style.backgroundColor = "#ffb74d"; // สีส้ม อันตราย
+            resultBox.style.backgroundColor = "#ffb74d"; 
             resultBox.style.color = "#000";
             riskLevel.innerText = "ระดับ: อันตราย";
         } else {
-            resultBox.style.backgroundColor = "#e53935"; // สีแดง อันตรายมาก
+            resultBox.style.backgroundColor = "#e53935"; 
             resultBox.style.color = "#fff";
             riskLevel.innerText = "ระดับ: อันตรายมาก";
         }
