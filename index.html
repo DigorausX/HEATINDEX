@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ดัชนีความร้อน (Heat Index)</title>
     
-    <!-- เพิ่ม MathJax สำหรับแสดงผลสมการคณิตศาสตร์ (LaTeX) -->
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
     <style>
         :root {
             --primary-color: #333;
@@ -96,6 +92,18 @@
             background: #ddd;
             margin: 30px 0;
         }
+        .formula-box {
+            background: #fdfefe;
+            border: 1px solid #e5e8e8;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            text-align: center;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            font-size: 1.1em;
+            overflow-x: auto;
+        }
     </style>
 </head>
 <body>
@@ -147,13 +155,13 @@
         </tr>
         <tr style="background-color: #e53935; color: #fff;">
             <td class="text-center">อันตรายมาก</td>
-            <td class="text-center">>= 52.0</td>
+            <td class="text-center">&gt;= 52.0</td>
             <td>เมื่อสัมผัสความร้อน และทำกิจกรรมกลางแจ้งเป็นเวลานานอย่างต่อเนื่อง มีความเสี่ยงสูงมากที่เกิดโรคลมร้อน หรือ ฮีทสโตรก (Heat stroke)</td>
         </tr>
     </table>
 
     <div class="info-box">
-        <strong>ข้อควรระวังสำคัญ:</strong> ค่าดัชนีความร้อนที่คำนวณได้นี้ เป็นค่าที่ถูกประเมินสำหรับ <strong>"พื้นที่ในร่มและมีลมพัดอ่อนๆ"</strong> หากคุณทำกิจกรรมกลางแจ้งที่โดนแสงแดดโดยตรง อุณหภูมิที่ร่างกายรู้สึกได้อาจเพิ่มสูงขึ้นจากค่าที่คำนวณได้อีกถึง 8°C (15°F)
+        <strong>ข้อควรระวังสำคัญ:</strong> ค่าดัชนีความร้อนที่คำนวณได้นี้ เป็นค่าที่ถูกประเมินสำหรับ <strong>"พื้นที่ในร่มและมีลมพัดอ่อนๆ"</strong> หากคุณทำกิจกรรมกลางแจ้งที่โดนแสงแดดโดยตรง อุณหภูมิที่ร่างกายรู้สึกได้อาจเพิ่มสูงขึ้นจากค่าที่คำนวณได้อีกถึง 8 °C
     </div>
 
     <hr>
@@ -161,27 +169,40 @@
     <h2>ที่มาและสมการคำนวณ (The Science of Heat Index)</h2>
     <p>แนวคิดเรื่องดัชนีความร้อน ถูกนำเสนอครั้งแรกในปี 1979 โดย <strong>Robert G. Steadman</strong> ซึ่งได้สร้างตารางประเมินผลกระทบของอุณหภูมิและความชื้นที่มีต่อร่างกายมนุษย์ อย่างไรก็ตาม ตารางของ Steadman มีตัวแปรซับซ้อนมากมาย</p>
     
-    <p>ในปี 1990 <strong>Lans P. Rothfusz</strong> ได้พัฒนาสมการทางคณิตศาสตร์แบบถดถอยพหุคูณ (Multiple Regression) เพื่อให้หน่วยงานพยากรณ์อากาศแห่งชาติของสหรัฐอเมริกา (NOAA / NWS) นำไปใช้คำนวณแทนตารางของ Steadman ได้ง่ายขึ้น โดยสมการหลักคือ:</p>
+    <p>ในปี 1990 <strong>Lans P. Rothfusz</strong> ได้พัฒนาสมการทางคณิตศาสตร์แบบถดถอยพหุคูณ (Multiple Regression) เพื่อให้หน่วยงานพยากรณ์อากาศแห่งชาติของสหรัฐอเมริกา (NOAA / NWS) นำไปใช้คำนวณแทนตารางของ Steadman ได้ง่ายขึ้น</p>
 
-    <div style="overflow-x: auto;">
-        $$ \text{HI} = -42.379 + 2.04901523T + 10.14333127R - 0.22475541TR - 0.00683783T^2 - 0.05481717R^2 + 0.00122874T^2R + 0.00085282TR^2 - 0.00000199T^2R^2 $$
+    <h3>การคำนวณและแปลงหน่วยองศาเซลเซียส (°C)</h3>
+    <p>เนื่องจากสมการต้นฉบับของสหรัฐอเมริกาใช้หน่วยเป็น <strong>องศาฟาเรนไฮต์ (°F)</strong> ระบบของเราจึงต้องทำการแปลงอุณหภูมิจากเซลเซียส (°C) ให้เป็นฟาเรนไฮต์ก่อนเข้าสมการ และแปลงผลลัพธ์ดัชนีความร้อนที่ได้กลับมาเป็นเซลเซียสอีกครั้งเพื่อให้คนไทยเข้าใจง่าย ดังนี้:</p>
+    
+    <div class="formula-box">
+        แปลง °C เป็น °F : T(°F) = (T(°C) × 9/5) + 32<br><br>
+        แปลง °F เป็น °C : T(°C) = (T(°F) - 32) × 5/9
+    </div>
+
+    <h3>สมการหลักของ Rothfusz</h3>
+    <div class="formula-box">
+        HI = -42.379 + 2.04901523T + 10.14333127R - 0.22475541TR - 0.00683783T<sup>2</sup> - 0.05481717R<sup>2</sup> + 0.00122874T<sup>2</sup>R + 0.00085282TR<sup>2</sup> - 0.00000199T<sup>2</sup>R<sup>2</sup>
     </div>
 
     <p>โดยที่:</p>
     <ul>
-        <li>$ \text{HI} $ = ดัชนีความร้อน (หน่วยเป็นองศาฟาเรนไฮต์ °F)</li>
-        <li>$ T $ = อุณหภูมิของอากาศ (หน่วยเป็นองศาฟาเรนไฮต์ °F)</li>
-        <li>$ R $ = ความชื้นสัมพัทธ์ (หน่วยเป็นเปอร์เซ็นต์ %)</li>
+        <li>HI = ดัชนีความร้อน (หน่วยเป็นองศาฟาเรนไฮต์ °F)</li>
+        <li>T = อุณหภูมิของอากาศ (หน่วยเป็นองศาฟาเรนไฮต์ °F)</li>
+        <li>R = ความชื้นสัมพัทธ์ (หน่วยเป็นเปอร์เซ็นต์ %)</li>
     </ul>
 
     <h3>การปรับแก้ของ NOAA (NOAA NWS Adjustments)</h3>
     <p>หน่วยงานสภาพอากาศแห่งชาติ (NWS) ได้เพิ่มเงื่อนไขการปรับแก้สมการของ Rothfusz เพื่อให้แม่นยำยิ่งขึ้นในสภาวะสุดโต่ง:</p>
     <ul>
-        <li><strong>กรณีอากาศแห้งและร้อนจัด:</strong> หากความชื้น $ R < 13\% $ และอุณหภูมิ $ T $ อยู่ระหว่าง 80 ถึง 112 °F จะต้องนำค่า $ \text{HI} $ มา <strong>ลบ</strong> ด้วยสมการชดเชย:
-        $$ \text{Adjustment} = \frac{13 - R}{4} \times \sqrt{\frac{17 - |T - 95|}{17}} $$
+        <li><strong>กรณีอากาศแห้งและร้อนจัด:</strong> หากความชื้น R &lt; 13% และอุณหภูมิ T อยู่ระหว่าง 80 ถึง 112 °F จะต้องนำค่า HI มา <strong>ลบ</strong> ด้วยค่าชดเชย:
+            <div class="formula-box">
+                Adjustment = ((13 - R) / 4) × √((17 - |T - 95|) / 17)
+            </div>
         </li>
-        <li><strong>กรณีอากาศชื้นจัดและอุณหภูมิไม่สูงมาก:</strong> หากความชื้น $ R > 85\% $ และอุณหภูมิ $ T $ อยู่ระหว่าง 80 ถึง 87 °F จะต้องนำค่า $ \text{HI} $ มา <strong>บวก</strong> ด้วยสมการชดเชย:
-        $$ \text{Adjustment} = \frac{R - 85}{10} \times \frac{87 - T}{5} $$
+        <li><strong>กรณีอากาศชื้นจัดและอุณหภูมิไม่สูงมาก:</strong> หากความชื้น R &gt; 85% และอุณหภูมิ T อยู่ระหว่าง 80 ถึง 87 °F จะต้องนำค่า HI มา <strong>บวก</strong> ด้วยค่าชดเชย:
+            <div class="formula-box">
+                Adjustment = ((R - 85) / 10) × ((87 - T) / 5)
+            </div>
         </li>
     </ul>
 
@@ -196,20 +217,17 @@
     const riskLevel = document.getElementById('riskLevel');
     const resultBox = document.getElementById('resultBox');
 
-    // ฟังก์ชันคำนวณตาม Algorithm ของ NOAA NWS (มีความแม่นยำสูงสุด)
     function calculateNOAAHeatIndex(tCelsius, rh) {
-        let t = (tCelsius * 9/5) + 32; // เปลี่ยน C เป็น F
+        // ขั้นตอนที่ 1: แปลงเซลเซียสเป็นฟาเรนไฮต์
+        let t = (tCelsius * 9/5) + 32; 
         
-        // ถ้าอุณหภูมิต่ำกว่า 80°F ใช้สูตรง่าย (Simple HI)
         let hi = 0.5 * (t + 61.0 + ((t - 68.0) * 1.2) + (rh * 0.094));
 
-        // ถ้า Simple HI ได้ 80°F ขึ้นไป ให้ใช้สมการของ Rothfusz เต็มรูปแบบ
         if (hi >= 80) {
             hi = -42.379 + 2.04901523*t + 10.14333127*rh - 0.22475541*t*rh 
                  - 0.00683783*t*t - 0.05481717*rh*rh + 0.00122874*t*t*rh 
                  + 0.00085282*t*rh*rh - 0.00000199*t*t*rh*rh;
 
-            // เงื่อนไขปรับแก้ (Adjustments) ตามมาตรฐาน NOAA
             if (rh < 13 && t >= 80 && t <= 112) {
                 let adjustment = ((13 - rh) / 4) * Math.sqrt((17 - Math.abs(t - 95)) / 17);
                 hi = hi - adjustment;
@@ -219,10 +237,9 @@
             }
         }
 
-        // เปลี่ยน F กลับเป็น C
+        // ขั้นตอนที่ 2: แปลงผลลัพธ์กลับเป็นเซลเซียส
         let hiCelsius = (hi - 32) * 5/9;
         
-        // ถ้าอุณหภูมิจริงต่ำกว่า 27C (อากาศไม่ร้อน) ปกติจะไม่นำมาคำนวณผลกระทบ
         if (tCelsius < 27) return tCelsius; 
         
         return hiCelsius;
