@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ดัชนีความร้อน (Heat Index)</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            text-align: center;
+            color: #e74c3c;
+        }
+        .calculator {
+            background: #fff3f3;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #ffcccc;
+            margin-top: 20px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        .result-box {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            background-color: #2ecc71; /* ค่าเริ่มต้นสีเขียว */
+            transition: background-color 0.3s;
+        }
+        .value-display {
+            font-weight: bold;
+            color: #d35400;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #2c3e50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ระบบคำนวณและให้ความรู้ Heat Index</h1>
+    <p><strong>ดัชนีความร้อน (Heat Index)</strong> คือ อุณหภูมิที่ร่างกายมนุษย์รู้สึกจริง เกิดจากการนำอุณหภูมิของอากาศมาคำนวณร่วมกับความชื้นสัมพัทธ์ เมื่อความชื้นสูง เหงื่อจะระเหยยากขึ้น ทำให้ร่างกายระบายความร้อนได้แย่ลง เราจึงรู้สึกร้อนกว่าปกติ</p>
+
+    <div class="calculator">
+        <h2>เครื่องคิดเลขดัชนีความร้อน</h2>
+        
+        <div class="input-group">
+            <label for="tempInput">อุณหภูมิอากาศ: <span id="tempValue" class="value-display">35</span> °C</label>
+            <input type="range" id="tempInput" min="25" max="50" value="35">
+        </div>
+
+        <div class="input-group">
+            <label for="humidInput">ความชื้นสัมพัทธ์: <span id="humidValue" class="value-display">60</span> %</label>
+            <input type="range" id="humidInput" min="0" max="100" value="60">
+        </div>
+
+        <div id="resultBox" class="result-box">
+            อุณหภูมิที่รู้สึกได้: <span id="heatIndexResult">45.8</span> °C <br>
+            <span id="riskLevel">ระดับ: อันตรายมาก (Danger)</span>
+        </div>
+    </div>
+
+    <h2>ระดับความอันตรายและผลกระทบ</h2>
+    <table>
+        <tr>
+            <th>อุณหภูมิที่รู้สึกได้ (°C)</th>
+            <th>ระดับการเตือนภัย</th>
+            <th>ผลกระทบต่อสุขภาพ</th>
+        </tr>
+        <tr style="background-color: #fcf3cf;">
+            <td>27 - 32</td>
+            <td>เฝ้าระวัง (Caution)</td>
+            <td>อ่อนเพลีย วิงเวียน หากทำกิจกรรมกลางแจ้งต่อเนื่อง</td>
+        </tr>
+        <tr style="background-color: #fdebd0;">
+            <td>32 - 41</td>
+            <td>อันตราย (Extreme Caution)</td>
+            <td>เสี่ยงต่อการเกิดตะคริวแดด และเพลียแดด</td>
+        </tr>
+        <tr style="background-color: #fadbd8;">
+            <td>41 - 54</td>
+            <td>อันตรายมาก (Danger)</td>
+            <td>เสี่ยงสูงที่จะเกิดเพลียแดดและฮีทสโตรก</td>
+        </tr>
+        <tr style="background-color: #f5b7b1;">
+            <td>มากกว่า 54</td>
+            <td>ระดับวิกฤต (Extreme Danger)</td>
+            <td>เสี่ยงสูงมากที่จะเกิดฮีทสโตรก (Heat Stroke) อันตรายถึงชีวิต</td>
+        </tr>
+    </table>
+</div>
+
+<script>
+    const tempInput = document.getElementById('tempInput');
+    const humidInput = document.getElementById('humidInput');
+    const tempValue = document.getElementById('tempValue');
+    const humidValue = document.getElementById('humidValue');
+    const heatIndexResult = document.getElementById('heatIndexResult');
+    const riskLevel = document.getElementById('riskLevel');
+    const resultBox = document.getElementById('resultBox');
+
+    // ฟังก์ชันคำนวณ Heat Index (แปลง C เป็น F ก่อนเข้าสูตร แล้วแปลงกลับ)
+    function calculateHeatIndex(tCelsius, rh) {
+        let t = (tCelsius * 9/5) + 32; // แปลงเป็น Fahrenheit
+        
+        // ใช้สมการของ Steadman / Rothfusz
+        let hi = -42.379 + 2.04901523*t + 10.14333127*rh - 0.22475541*t*rh 
+                 - 0.00683783*t*t - 0.05481717*rh*rh + 0.00122874*t*t*rh 
+                 + 0.00085282*t*rh*rh - 0.00000199*t*t*rh*rh;
+
+        // แปลงกลับเป็น Celsius
+        let hiCelsius = (hi - 32) * 5/9;
+        
+        // หากอุณหภูมิจริงต่ำกว่า 27C ปกติ Heat Index จะไม่สูงไปกว่าอุณหภูมิจริงมากนัก
+        if (tCelsius < 27) return tCelsius; 
+        
+        return hiCelsius;
+    }
+
+    function updateCalculator() {
+        let t = parseFloat(tempInput.value);
+        let rh = parseFloat(humidInput.value);
+
+        tempValue.innerText = t;
+        humidValue.innerText = rh;
+
+        let hi = calculateHeatIndex(t, rh);
+        heatIndexResult.innerText = hi.toFixed(1);
+
+        // จัดการระดับสีและข้อความเตือน
+        if (hi < 32) {
+            resultBox.style.backgroundColor = "#f1c40f"; // เหลือง
+            riskLevel.innerText = "ระดับ: เฝ้าระวัง (Caution)";
+        } else if (hi >= 32 && hi < 41) {
+            resultBox.style.backgroundColor = "#e67e22"; // ส้ม
+            riskLevel.innerText = "ระดับ: อันตราย (Extreme Caution)";
+        } else if (hi >= 41 && hi < 54) {
+            resultBox.style.backgroundColor = "#e74c3c"; // แดง
+            riskLevel.innerText = "ระดับ: อันตรายมาก (Danger)";
+        } else {
+            resultBox.style.backgroundColor = "#c0392b"; // แดงเข้ม
+            riskLevel.innerText = "ระดับ: อันตรายระดับวิกฤต (Extreme Danger)";
+        }
+    }
+
+    // อัปเดตข้อมูลเมื่อมีการเลื่อน Slider
+    tempInput.addEventListener('input', updateCalculator);
+    humidInput.addEventListener('input', updateCalculator);
+
+    // เรียกใช้ครั้งแรกเมื่อเปิดหน้าเว็บ
+    updateCalculator();
+</script>
+
+</body>
+</html>
