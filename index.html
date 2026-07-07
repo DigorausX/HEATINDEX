@@ -126,7 +126,7 @@
         </div>
 
         <div id="resultBox" class="result-box">
-            อุณหภูมิที่รู้สึกได้: <span id="heatIndexResult">41.0</span> °C <br>
+                        อุณหภูมิที่รู้สึกได้: <span id="heatIndexResult">41.00</span> °C <br>
             <span id="riskLevel">ระดับ: เตือนภัย</span>
         </div>
     </div>
@@ -148,7 +148,7 @@
             <td class="text-center">33.0 - 41.9</td>
             <td>เมื่อสัมผัสความร้อน และทำกิจกรรมกลางแจ้งเป็นเวลานาน อาจมีความเสี่ยงที่จะเกิดโรคเพลียแดด (Heat exhaustion) และเป็นตะคริวจากความร้อนได้ และอาจส่งผลให้เกิดโรคลมร้อน หรือ ฮีทสโตรก (Heat stroke)</td>
         </tr>
-        <tr style="background-color: #ffb74d; color: #000;">
+|        <tr style="background-color: #ffb74d; color: #000;">
             <td class="text-center">อันตราย</td>
             <td class="text-center">42.0 - 51.9</td>
             <td>เมื่อสัมผัสความร้อน และทำกิจกรรมกลางแจ้งเป็นเวลานาน อาจทำให้เป็นตะคริวจากความร้อน และเกิดโรคเพลียแดดจากความร้อน (Heat exhaustion) และเพิ่มความเสี่ยงต่อการเกิดโรคลมร้อน หรือ ฮีทสโตรก (Heat stroke) ได้ หากสัมผัสความร้อนอย่างต่อเนื่อง</td>
@@ -217,6 +217,7 @@
     const riskLevel = document.getElementById('riskLevel');
     const resultBox = document.getElementById('resultBox');
 
+    // ฟังก์ชันหลักในการคำนวณ (ยังคงเหมือนเดิม เพราะคืนค่า raw float)
     function calculateNOAAHeatIndex(tCelsius, rh) {
         // ขั้นตอนที่ 1: แปลงเซลเซียสเป็นฟาเรนไฮต์
         let t = (tCelsius * 9/5) + 32; 
@@ -245,6 +246,7 @@
         return hiCelsius;
     }
 
+    // ส่วนที่แก้ไข: การอัปเดตผลลัพธ์และเงื่อนไขระดับความเสี่ยง
     function updateCalculator() {
         let t = parseFloat(tempInput.value);
         let rh = parseFloat(humidInput.value);
@@ -253,22 +255,25 @@
         humidValue.innerText = rh;
 
         let hi = calculateNOAAHeatIndex(t, rh);
-        let hiFixed = hi.toFixed(1);
+        
+        // แก้ไข 1: เปลี่ยนจาก toFixed(1) เป็น toFixed(2)
+        let hiFixed = hi.toFixed(2); 
         heatIndexResult.innerText = hiFixed;
 
+        // แก้ไข 2: ปรับปรุงเงื่อนไข if-else ให้ครอบคลุมจุดทศนิยมที่อยู่ระหว่างช่วง
         if (hi < 27.0) {
             resultBox.style.backgroundColor = "#e0e0e0"; 
             resultBox.style.color = "#333";
             riskLevel.innerText = "ระดับ: ปกติ";
-        } else if (hi >= 27.0 && hi <= 32.9) {
+        } else if (hi < 33.0) { // เดิมเช็ก >= 27.0 && hi <= 32.9 -> ช่องโหว่ 32.91 - 32.99
             resultBox.style.backgroundColor = "#aed581"; 
             resultBox.style.color = "#000";
             riskLevel.innerText = "ระดับ: เฝ้าระวัง";
-        } else if (hi >= 33.0 && hi <= 41.9) {
+        } else if (hi < 42.0) { // เดิมเช็ก >= 33.0 && hi <= 41.9 -> ช่องโหว่ 41.91 - 41.99
             resultBox.style.backgroundColor = "#fff176"; 
             resultBox.style.color = "#000";
             riskLevel.innerText = "ระดับ: เตือนภัย";
-        } else if (hi >= 42.0 && hi <= 51.9) {
+        } else if (hi < 52.0) { // เดิมเช็ก >= 42.0 && hi <= 51.9 -> ช่องโหว่ 51.91 - 51.99
             resultBox.style.backgroundColor = "#ffb74d"; 
             resultBox.style.color = "#000";
             riskLevel.innerText = "ระดับ: อันตราย";
@@ -281,7 +286,7 @@
 
     tempInput.addEventListener('input', updateCalculator);
     humidInput.addEventListener('input', updateCalculator);
-    updateCalculator();
+    updateCalculator(); // เรียกใช้ครั้งแรกเพื่อตั้งค่าเริ่มต้น
 </script>
 
 </body>
